@@ -9,14 +9,15 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
+                bat 'python -m venv venv'
                 bat 'python -m pip install --upgrade pip'
-                bat 'pip install -r requirements.txt'
-                bat 'playwright install'
+                bat 'call venv\\Scripts\\activate && pip install -r requirements.txt'
+                bat 'call venv\\Scripts\\activate && playwright install'
             }
         }
         stage('Run Tests') {
             steps {
-                bat 'pytest homePage.py -v'
+                bat 'call venv\\Scripts\\activate && pytest homePage.py -v'
             }
         }
     }
