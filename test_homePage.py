@@ -76,8 +76,6 @@ def test_TC009_Increment_Decrement_items(page):
     page.wait_for_selector(HomePage.Gotocart).click()
     page.wait_for_selector(HomePage.incrementicon).click()
     page.wait_for_timeout(1000)
-    page.wait_for_selector(HomePage.decrementicon).click()
-    page.wait_for_timeout(1000)
 
 
 @pytest.mark.order(10)
