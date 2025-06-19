@@ -2,28 +2,29 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Setup and Test') {
             steps {
-                git 'https://github.com/kchilla872/Playwright.git'
+                script {
+                    bat '''
+                        cd "C:\\Users\\karthik.chillara\\PycharmProjects\\Playwright0619"
+                        call venv\\Scripts\\activate
+                        pip install -r requirements.txt
+                        playwright install chromium --with-deps
+                        pytest test_homePage.py --alluredir=allure-results --add_video
+                    '''
+                }
             }
         }
-        stage('Install Dependencies') {
+        stage('Publish Allure Report') {
             steps {
-                bat 'python -m venv venv'
-                bat 'python -m pip install --upgrade pip'
-                bat 'call venv\\Scripts\\activate && pip install -r requirements.txt'
-                bat 'call venv\\Scripts\\activate && playwright install'
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    properties: [],
+                    reportBuildPolicy: 'ALWAYS',
+                    results: [[path: 'allure-results']]
+                ])
             }
-        }
-        stage('Run Tests') {
-            steps {
-                bat 'call venv\\Scripts\\activate && pytest homePage.py -v'
-            }
-        }
-    }
-    post {
-        always {
-            cleanWs()
         }
     }
 }
